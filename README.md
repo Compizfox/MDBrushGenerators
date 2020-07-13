@@ -73,5 +73,11 @@ cells that do not contain a point. It starts out containing all the cells. When 
 removed form the active cells list. The cell lookup list is a 2D matrix that starts out empty. When a point is added,
 its coordinates get added to the respective cell in the list, in order to accelerate searching for overlaps.
 
+This algorithm can end in one of three ways: either the desired number of points is reached, no active cells are left,
+or there are active cells left but the point set is maximal and no extra points can be added to the set. In the first
+case, the result (consisting of a set of point coordinates) is satisfactory. In the second case, the result is a valid
+point set, but the density is lower than requested. In the third case, the algorithm doesn't halt intrinsically and an
+iteration limit (of the outer loop) is required to halt the program after some time.
+
 This algorithm appears (empirically) to be `O(n)`, i.e. linear in time with respect to `n` at constant `r` and point
 density.
