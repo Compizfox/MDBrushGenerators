@@ -3,9 +3,10 @@
 ![Python version](https://img.shields.io/badge/Python-%3E3.6-orange)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Compizfox/MDBrushGenerators)
 
-
 MDBrushGenerators contains scripts for generating LAMMPS initial data files comprising polymer brush systems (polymers
 end-grafted to a surface).
+
+![Snapshot](https://user-images.githubusercontent.com/7603719/87414213-b8f02400-c5cb-11ea-87a8-f4b63c076801.png)
 
 The core of the repository is `BrushGenerator`: an abstract, extensible, model-agnostic class for building a polymer
 brush system and writing the initial data file in the format LAMMPS accepts. It makes use of a Poisson-disk point set
