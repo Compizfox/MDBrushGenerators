@@ -2,6 +2,7 @@
 ![GitHub license](https://img.shields.io/github/license/Compizfox/MDBrushGenerators)
 ![Python version](https://img.shields.io/badge/Python-%3E3.6-orange)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Compizfox/MDBrushGenerators)
+[![DOI](https://zenodo.org/badge/279256604.svg)](https://zenodo.org/badge/latestdoi/279256604)
 
 MDBrushGenerators contains scripts for generating LAMMPS initial data files comprising polymer brush systems (polymers
 end-grafted to a surface).
