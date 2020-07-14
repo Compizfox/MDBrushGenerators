@@ -24,6 +24,7 @@ foo@bar:~$ git clone https://github.com/Compizfox/MDBrushGenerators.git
 
 or download a release and extract it. The Git approach has the advantage that updating is as easy as `git pull`.
 
+### Dependencies
 MDBrushGenerators requires at least Python 3.6. The only external libraries required are Numpy and Pandas, which are
 installable using your OS's package manager or using Pip:
 
@@ -52,9 +53,9 @@ Pandas DataFrames afterwards. Then, in `write()`, the DataFrames are read and co
 with force field coefficients.
 
 ### `PoissonDiskGenerator`
-The grafting coordinates are sampled from a Poisson-disk distribution. A Poisson-disk point set is a set of points
+The grafting coordinates are sampled from a Poisson-disk distribution. A Poisson-disk point set is a set of `n` points
 randomly sampled from a uniform distribution, with the constraint that no pair of points is closer than a given distance
-`r`. 
+`r`.
 
 The class `PoissonDiskGenerator` class generates Poisson-disk point sets using cell list accelerated dart throwing.
 
@@ -81,3 +82,7 @@ iteration limit (of the outer loop) is required to halt the program after some t
 
 This algorithm appears (empirically) to be `O(n)`, i.e. linear in time with respect to `n` at constant `r` and point
 density.
+
+## License
+This project is free software licensed under the GPL. See [LICENSE](LICENSE) for details.
+
