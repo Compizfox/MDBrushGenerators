@@ -45,7 +45,7 @@ class PoissonDiskGenerator:
 			for i, j in self.neighbor_matrix:
 				x = cell[0] + i
 				y = cell[1] + j
-				if 0 <= x <= (x_max - 1) and 0 <= y <= (x_max - 1):
+				if 0 <= x <= (x_max - 1) and 0 <= y <= (y_max - 1):
 					coord = grid_lookup[x][y]
 					if coord is not None:
 						dist = (point - coord)**2
