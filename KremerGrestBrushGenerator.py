@@ -26,17 +26,20 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		AtomTypes.solvent: 1
 	}
 
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int]):
+	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], graft: bool = True):
 		"""
 		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box.
 		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
 		"""
 		bead_size = 1  # (sigma)
 		bottom_padding = 1  # (sigma)
+		self.graft = graft
 		super().__init__(box_size, rng_seed, bead_size, bottom_padding)
 
 	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> None:
 		if bead_id == 0:
+			if not self.graft:
+				return
 			atom_type = self.AtomTypes.graft.value
 		else:
 			atom_type = self.AtomTypes.bead.value
@@ -50,7 +53,7 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		                         })
 
 		# Molecular topology
-		if bead_id >= 1:
+		if bead_id >= 1 and self.graft or bead_id >= 2:
 			atom_id = len(self._atoms_list)
 			self._bonds_list.append({'bond_type': self.BondTypes.fene.value,
 			                         'atom1'    : atom_id - 1,
