@@ -107,10 +107,9 @@ class BrushGenerator(ABC):
 		self.angles.index += 1
 		self.dihedrals.index += 1
 
-	def write(self, filename: str, compression: Optional[str] = None) -> None:
+	def write(self, filename: str) -> None:
 		"""
 		Write the LAMMPS data file.
-		:param str compression: Compression to use for the output file. May be 'gzip' or None.
 		:param str filename: Filename for the output file.
 		"""
 		num_atoms = len(self.atoms)
@@ -123,10 +122,8 @@ class BrushGenerator(ABC):
 		num_angle_types = len(self.AngleTypes) if not self.angles.empty else 0
 		num_dihedral_types = len(self.DihedralTypes) if not self.dihedrals.empty else 0
 
-		if compression == 'gzip':
-			o = gzip.open
-		else:
-			o = open
+		# Auto-detect gzipped files
+		o = gzip.open if filename.endswith('.gz') else open
 
 		with o(filename, 'xt', newline='\n') as f:
 			# Header
