@@ -30,6 +30,7 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		"""
 		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box.
 		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param bool  graft:     Generates grafted brushes when True, and non-grafted films when False
 		"""
 		bead_size = 1  # (sigma)
 		bottom_padding = 1  # (sigma)
@@ -38,6 +39,7 @@ class KremerGrestBrushGenerator(BrushGenerator):
 
 	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> None:
 		if bead_id == 0:
+			# Omit grafting bead if graft=False
 			if not self.graft:
 				return
 			atom_type = self.AtomTypes.graft.value
