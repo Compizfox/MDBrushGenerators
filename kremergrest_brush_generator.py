@@ -26,4 +26,4 @@ ax.scatter(kgbg.coordinates[:, 0], kgbg.coordinates[:, 1])
 plt.show()
 
 kgbg.build(chain_length)
-kgbg.write(f'brush_gd{density}_N{chain_length}.pos.gz', compression='gzip')
+kgbg.write(f'brush_gd{density}_N{chain_length}.pos.gz')
