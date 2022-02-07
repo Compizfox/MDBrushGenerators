@@ -8,11 +8,14 @@ from KremerGrestBrushGenerator import KremerGrestBrushGenerator
 
 chain_length = 100
 density = 0.25  # sigma^-2
-size = (chain_length/2, chain_length/2, chain_length + 1)  # sigma
+x = chain_length
+y = chain_length
+z = chain_length + 1
 
-n = int(density*size[0]*size[1])
+size = (x, y, z)  # sigma
+n = int(density * size[0] * size[1])
 
-kgbg = KremerGrestBrushGenerator(size, 34882)
+kgbg = KremerGrestBrushGenerator(size, 34882, chain_length, graft=True)
 
 n_actual = kgbg.generate_grafting_layer(n, 10**6)
 
@@ -25,5 +28,5 @@ fig, ax = plt.subplots()
 ax.scatter(kgbg.coordinates[:, 0], kgbg.coordinates[:, 1])
 plt.show()
 
-kgbg.build(chain_length)
-kgbg.write(f'brush_gd{density}_N{chain_length}.pos.gz')
+kgbg.build()
+kgbg.write(f'brush_gd{density}_N{chain_length}_{x}x{y}x{z}.pos.gz')

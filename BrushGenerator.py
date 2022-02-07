@@ -30,7 +30,7 @@ class BrushGenerator(ABC):
 	angle_coeffs: dict = {}
 	dihedral_coeffs: dict = {}
 
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], bead_size: float,
+	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], bead_size: float, n_beads: int,
 	             bottom_padding: float = 0):
 		"""
 		:param Tuple box_size:       3-tuple of floats describing the dimensions of the rectangular box.
@@ -38,12 +38,14 @@ class BrushGenerator(ABC):
 		                             used.
 		:param float bead_size:      Size of the 'grafting beads': used as minimum distance for the Poisson-disk
 		                             point set generator.
+		:param int   n_beads         Chain length.
 		:param float bottom_padding: Distance between the bottom edge of the box and the grafting layer. Must be
 		                             positive.
 		"""
 		self.box_size = box_size
 		self.rng_seed = rng_seed
 		self.bead_size = bead_size
+		self.n_beads = n_beads
 		self.bottom_padding = bottom_padding
 
 		self.coordinates: np.ndarray = np.array([])
@@ -84,17 +86,23 @@ class BrushGenerator(ABC):
 
 		return len(self.coordinates)
 
-	def build(self, n_beads: int) -> None:
+	def _build_chain(self) -> None:
 		"""
-		Create atom positions and molecular topology for a randomly-grafted monodisperse AdG-brush.
-		:param int n_beads: Number of beads per chain.
+		Create chains by looping over chains and beads in each chain, calling _build_bead() for each bead.
 		"""
 		# Loop over chains
 		for mol_id, i in enumerate(self.coordinates):
 			# Loop over successive beads in chain
-			for j in range(0, n_beads + 1):
+			for j in range(0, self.n_beads + 1):
 				self._build_bead(mol_id, i, j)
 
+	def build(self) -> None:
+		"""
+		Create atom positions and molecular topology for a randomly-grafted monodisperse AdG-brush.
+		"""
+		self._build_chain()
+
+		# Make dataframes from the non-final lists created by _build_chain()
 		self.atoms = pd.DataFrame(self._atoms_list, columns=['mol_id', 'atom_type', 'q', 'x', 'y', 'z'])
 		self.bonds = pd.DataFrame(self._bonds_list, columns=['bond_type', 'atom1', 'atom2'])
 		self.angles = pd.DataFrame(self._angles_list, columns=['angle_type', 'atom1', 'atom2', 'atom3'])

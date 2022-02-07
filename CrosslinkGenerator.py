@@ -33,11 +33,12 @@ class CrosslinkGenerator(BrushGenerator):
 		AtomTypes.branch : 1,
 	}
 
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], side_freq: float = 0.0,
+	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], n_beads: int, side_freq: float = 0.0,
 	             het_freq: float = 0.0):
 		"""
 		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box.
 		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param int   n_beads    Chain length.
 		:param float side_freq: Chance of a given backbone particle having a side group attached to it, mutually
 		                        exclusive with being a heteroparticle.
 		:param float het_freq:  Chance of a given backbone particle being a heteroparticle, mutually exclusive with
@@ -51,7 +52,7 @@ class CrosslinkGenerator(BrushGenerator):
 		self.side_freq = side_freq
 		self.side_chance = side_freq/(1 - self.het_chance)
 
-		super().__init__(box_size, rng_seed, bead_size, bottom_padding)
+		super().__init__(box_size, rng_seed, bead_size, n_beads, bottom_padding)
 
 	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> None:
 		if bead_id == 0:

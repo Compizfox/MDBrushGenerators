@@ -26,16 +26,17 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		AtomTypes.solvent: 1
 	}
 
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], graft: bool = True):
+	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], n_beads: int, graft: bool = True):
 		"""
 		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box.
 		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param int   n_beads    Chain length.
 		:param bool  graft:     Generates grafted brushes when True, and non-grafted films when False
 		"""
 		bead_size = 1  # (sigma)
 		bottom_padding = 1  # (sigma)
 		self.graft = graft
-		super().__init__(box_size, rng_seed, bead_size, bottom_padding)
+		super().__init__(box_size, rng_seed, bead_size, n_beads, bottom_padding)
 
 	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> None:
 		if bead_id == 0:
