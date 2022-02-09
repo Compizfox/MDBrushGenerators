@@ -15,10 +15,11 @@ class PolydisperseKGBrushGenerator(KremerGrestBrushGenerator):
 	Generate a LAMMPS data file containing a polydisperse Kremer-Grest polymer brush grafted to a planar wall in a
 	rectangular box.
 	"""
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], cld: rv_frozen,
+	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], cld: rv_frozen,
 	             cg_factor: float = 1, graft: bool = True):
 		"""
-		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box.
+		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box. If the third
+		                  (z) value is None, it will be automatically sized to contain the longest chain.
 		:param rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
 		:param cld:       Chain length distribution.
 		:param cg_factor: Coarse-graining factor (number of real monomers per coarse-grained bead) that the chain
@@ -31,14 +32,19 @@ class PolydisperseKGBrushGenerator(KremerGrestBrushGenerator):
 
 		super().__init__(box_size, rng_seed, 0, graft)
 
-	def _build_chain(self) -> None:
+	def _build_chain(self) -> float:
+		z_max = 0
 		# Loop over chains
 		for mol_id, i in enumerate(self.coordinates):
 			# Randomly draw a number from the chain length distribution
 			n = round(self.cld.rvs(random_state=self.rng) / self.cld_factor)
 			# Loop over successive beads in chain
 			for j in range(0, n + 1):
-				self._build_bead(mol_id, i, j)
+				z = self._build_bead(mol_id, i, j)
+				if z > z_max:
+					z_max = z
+
+		return z_max
 
 
 class PoissonKGBrushGenerator(PolydisperseKGBrushGenerator):
@@ -46,7 +52,7 @@ class PoissonKGBrushGenerator(PolydisperseKGBrushGenerator):
 	Generate a LAMMPS data file containing a Kremer-Grest polymer brush, with chain lengths obeying a Poisson
 	distribution, grafted to a planar wall in a	rectangular box.
 	"""
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], n_mean: int,
+	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], n_mean: int,
 	             cg_factor: float = 1, graft: bool = True):
 		"""
 		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box.

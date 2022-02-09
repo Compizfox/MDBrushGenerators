@@ -30,10 +30,11 @@ class BrushGenerator(ABC):
 	angle_coeffs: dict = {}
 	dihedral_coeffs: dict = {}
 
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], bead_size: float, n_beads: int,
-	             bottom_padding: float = 0):
+	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], bead_size: float,
+	             n_beads: int, bottom_padding: float = 0):
 		"""
-		:param Tuple box_size:       3-tuple of floats describing the dimensions of the rectangular box.
+		:param Tuple box_size:       3-tuple of floats describing the dimensions of the rectangular box. If the third
+		                             (z) value is None, it will be automatically sized to contain the longest chain.
 		:param int   rng_seed:       Seed used to initialize the PRNG. May be None, in which case a random seed will be
 		                             used.
 		:param float bead_size:      Size of the 'grafting beads': used as minimum distance for the Poisson-disk
@@ -42,7 +43,7 @@ class BrushGenerator(ABC):
 		:param float bottom_padding: Distance between the bottom edge of the box and the grafting layer. Must be
 		                             positive.
 		"""
-		self.box_size = box_size
+		self.box_size = list(box_size)
 		self.rng_seed = rng_seed
 		self.bead_size = bead_size
 		self.n_beads = n_beads
@@ -63,13 +64,14 @@ class BrushGenerator(ABC):
 		self.dihedrals: pd.DataFrame = pd.DataFrame()
 
 	@abstractmethod
-	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> None:
+	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> float:
 		"""
 		Adds a bead to the instance's atom/bond/angle/dihedral lists.
 		Override this and implement according to the polymer model used. Note that LAMMPS expects ids to be 1-indexed.
 		:param int        mol_id:      0-indexed molecule (chain) id
 		:param np.ndarray graft_coord: 2-element ndarray containing xy coordinate of the grafting point
 		:param int        bead_id:     0-indexed bead id
+		:return float:                 Maximum z height
 		"""
 		pass
 
@@ -86,21 +88,30 @@ class BrushGenerator(ABC):
 
 		return len(self.coordinates)
 
-	def _build_chain(self) -> None:
+	def _build_chain(self) -> float:
 		"""
 		Create chains by looping over chains and beads in each chain, calling _build_bead() for each bead.
+		:return float:                 Maximum z height
 		"""
+		z_max = 0
 		# Loop over chains
 		for mol_id, i in enumerate(self.coordinates):
 			# Loop over successive beads in chain
 			for j in range(0, self.n_beads + 1):
-				self._build_bead(mol_id, i, j)
+				z = self._build_bead(mol_id, i, j)
+				if z > z_max:
+					z_max = z
+
+		return z_max
 
 	def build(self) -> None:
 		"""
 		Create atom positions and molecular topology for a randomly-grafted monodisperse AdG-brush.
 		"""
-		self._build_chain()
+		# Set z size to z_max from _build_chain() if not set
+		z_max = self._build_chain()
+		if not self.box_size[2]:
+			self.box_size[2] = z_max + 1
 
 		# Make dataframes from the non-final lists created by _build_chain()
 		self.atoms = pd.DataFrame(self._atoms_list, columns=['mol_id', 'atom_type', 'q', 'x', 'y', 'z'])
