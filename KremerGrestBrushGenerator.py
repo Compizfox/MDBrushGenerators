@@ -2,7 +2,7 @@
 Exports the KremerGrestBrushGenerator class
 """
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 
@@ -26,7 +26,7 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		AtomTypes.solvent: 1
 	}
 
-	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], n_beads: int,
+	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], n_beads: int,
 	             graft: bool = True):
 		"""
 		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box. If the third

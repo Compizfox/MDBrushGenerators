@@ -4,7 +4,7 @@ Written by G.C. Ritsema van Eck, liberally borrowing and butchering work by L.B.
 """
 import random
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 
@@ -33,8 +33,8 @@ class CrosslinkGenerator(BrushGenerator):
 		AtomTypes.branch : 1,
 	}
 
-	def __init__(self, box_size: Tuple[float, float, float], rng_seed: Optional[int], n_beads: int, side_freq: float = 0.0,
-	             het_freq: float = 0.0):
+	def __init__(self, box_size: tuple[float, float, float], rng_seed: Optional[int], n_beads: int,
+	             side_freq: float = 0.0, het_freq: float = 0.0):
 		"""
 		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box.
 		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.

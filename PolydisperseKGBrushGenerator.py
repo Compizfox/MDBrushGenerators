@@ -1,7 +1,7 @@
 """
 Exports the PolydisperseKGBrushGenerator and PoissonKGBrushGenerator classes
 """
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 from scipy.stats._distn_infrastructure import rv_frozen
@@ -15,7 +15,7 @@ class PolydisperseKGBrushGenerator(KremerGrestBrushGenerator):
 	Generate a LAMMPS data file containing a polydisperse Kremer-Grest polymer brush grafted to a planar wall in a
 	rectangular box.
 	"""
-	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], cld: rv_frozen,
+	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], cld: rv_frozen,
 	             cg_factor: float = 1, graft: bool = True):
 		"""
 		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box. If the third
@@ -52,7 +52,7 @@ class PoissonKGBrushGenerator(PolydisperseKGBrushGenerator):
 	Generate a LAMMPS data file containing a Kremer-Grest polymer brush, with chain lengths obeying a Poisson
 	distribution, grafted to a planar wall in a	rectangular box.
 	"""
-	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], n_mean: int,
+	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], n_mean: int,
 	             cg_factor: float = 1, graft: bool = True):
 		"""
 		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box.

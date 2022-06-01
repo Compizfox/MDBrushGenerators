@@ -5,7 +5,7 @@ Exports the BrushGenerator class
 import gzip
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -30,7 +30,7 @@ class BrushGenerator(ABC):
 	angle_coeffs: dict = {}
 	dihedral_coeffs: dict = {}
 
-	def __init__(self, box_size: Tuple[float, float, Optional[float]], rng_seed: Optional[int], bead_size: float,
+	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], bead_size: float,
 	             n_beads: int, bottom_padding: float = 0):
 		"""
 		:param Tuple box_size:       3-tuple of floats describing the dimensions of the rectangular box. If the third
