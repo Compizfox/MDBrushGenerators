@@ -26,6 +26,11 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		AtomTypes.solvent: 1
 	}
 
+	styles = {
+		'pair': 'lj/cut',
+		'bond': 'fene',
+	}
+
 	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], n_beads: int,
 	             graft: bool = True):
 		"""

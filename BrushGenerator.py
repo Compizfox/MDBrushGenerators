@@ -30,6 +30,13 @@ class BrushGenerator(ABC):
 	angle_coeffs: dict = {}
 	dihedral_coeffs: dict = {}
 
+	styles: dict[str] = {
+		'pair': '',
+		'bond': '',
+		'angle': '',
+		'dihedral': '',
+	}
+
 	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], bead_size: float,
 	             n_beads: int, bottom_padding: float = 0):
 		"""
@@ -162,6 +169,36 @@ class BrushGenerator(ABC):
 			f.write(f"0 {self.box_size[1]} ylo yhi\n")
 			f.write(f"-{self.bottom_padding} {self.box_size[2]} zlo zhi\n\n")
 
+			# Force field coeffs
+			f.write("Masses\n\n")
+			for k, v in self.masses.items():
+				f.write(f"{k.value} {v}\n")
+			f.write("\n")
+
+			if len(self.pair_ij_coeffs) > 0:
+				f.write("PairIJ Coeffs" + (f" # {self.styles['pair']}" if self.styles['pair'] else '') + "\n\n")
+				for k, v in self.pair_ij_coeffs.items():
+					f.write(f"{k[0].value} {k[1].value} {v}\n")
+				f.write("\n")
+
+			if len(self.bond_coeffs) > 0:
+				f.write("Bond Coeffs" + (f" # {self.styles['bond']}" if self.styles['bond'] else '') + "\n\n")
+				for k, v in self.bond_coeffs.items():
+					f.write(f"{k.value} {v}\n")
+				f.write("\n")
+
+			if len(self.angle_coeffs) > 0:
+				f.write("Angle Coeffs" + (f" # {self.styles['angle']}" if self.styles['angle'] else '') + "\n\n")
+				for k, v in self.angle_coeffs.items():
+					f.write(f"{k.value} {v}\n")
+				f.write("\n")
+
+			if len(self.dihedral_coeffs) > 0:
+				f.write("Dihedral Coeffs" + (f" # {self.styles['dihedral']}" if self.styles['dihedral'] else '') + "\n\n")
+				for k, v in self.dihedral_coeffs.items():
+					f.write(f"{k.value} {v}\n")
+				f.write("\n")
+
 			# Atom properties
 			f.write("Atoms # full\n\n")
 			self.atoms.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
@@ -169,7 +206,7 @@ class BrushGenerator(ABC):
 
 			# Molecular topology
 			if len(self.bonds) > 0:
-				f.write("Bonds\n\n")
+				f.write(f"Bonds\n\n")
 				self.bonds.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
 				f.write("\n")
 			if len(self.angles) > 0:
@@ -179,34 +216,4 @@ class BrushGenerator(ABC):
 			if len(self.dihedrals) > 0:
 				f.write("Dihedrals\n\n")
 				self.dihedrals.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
-				f.write("\n")
-
-			# Force field coeffs
-			f.write("Masses\n\n")
-			for k, v in self.masses.items():
-				f.write(f"{k.value} {v}\n")
-			f.write("\n")
-
-			if len(self.pair_ij_coeffs) > 0:
-				f.write("PairIJ Coeffs\n\n")
-				for k, v in self.pair_ij_coeffs.items():
-					f.write(f"{k[0].value} {k[1].value} {v}\n")
-				f.write("\n")
-
-			if len(self.bond_coeffs) > 0:
-				f.write("Bond Coeffs\n\n")
-				for k, v in self.bond_coeffs.items():
-					f.write(f"{k.value} {v}\n")
-				f.write("\n")
-
-			if len(self.angle_coeffs) > 0:
-				f.write("Angle Coeffs\n\n")
-				for k, v in self.angle_coeffs.items():
-					f.write(f"{k.value} {v}\n")
-				f.write("\n")
-
-			if len(self.dihedral_coeffs) > 0:
-				f.write("Dihedral Coeffs\n\n")
-				for k, v in self.dihedral_coeffs.items():
-					f.write(f"{k.value} {v}\n")
 				f.write("\n")
