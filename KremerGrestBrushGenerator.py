@@ -49,7 +49,7 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		if bead_id == 0:
 			# Omit grafting bead if graft=False
 			if not self.graft:
-				return
+				return 0
 			atom_type = self.AtomTypes.graft.value
 		else:
 			atom_type = self.AtomTypes.bead.value
