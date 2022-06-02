@@ -1,6 +1,7 @@
 """
 Exports the KremerGrestBrushGenerator class
 """
+
 from enum import Enum
 from typing import Optional
 
@@ -34,11 +35,11 @@ class KremerGrestBrushGenerator(BrushGenerator):
 	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], n_beads: int,
 	             graft: bool = True):
 		"""
-		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box. If the third
-		                        (z) value is None, it will be automatically sized to contain the longest chain.
-		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
-		:param int   n_beads    Chain length.
-		:param bool  graft:     Generates grafted brushes when True, and non-grafted films when False
+		:param box_size: 3-tuple of floats describing the dimensions of the rectangular box. If the third (z) value
+		                 is None, it will be automatically sized to contain the longest chain.
+		:param rng_seed: Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param n_beads:  Chain length.
+		:param graft:    Generates grafted brushes when True, and non-grafted films when False
 		"""
 		bead_size = 1  # (sigma)
 		bottom_padding = 1  # (sigma)

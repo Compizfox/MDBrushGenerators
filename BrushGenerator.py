@@ -40,15 +40,13 @@ class BrushGenerator(ABC):
 	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], bead_size: float,
 	             n_beads: int, bottom_padding: float = 0):
 		"""
-		:param Tuple box_size:       3-tuple of floats describing the dimensions of the rectangular box. If the third
-		                             (z) value is None, it will be automatically sized to contain the longest chain.
-		:param int   rng_seed:       Seed used to initialize the PRNG. May be None, in which case a random seed will be
-		                             used.
-		:param float bead_size:      Size of the 'grafting beads': used as minimum distance for the Poisson-disk
-		                             point set generator.
-		:param int   n_beads         Chain length.
-		:param float bottom_padding: Distance between the bottom edge of the box and the grafting layer. Must be
-		                             positive.
+		:param box_size:       3-tuple of floats describing the dimensions of the rectangular box. If the third (z)
+		                       value is None, it will be automatically sized to contain the longest chain.
+		:param rng_seed:       Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param bead_size:      Size of the 'grafting beads': used as minimum distance for the Poisson-disk point set
+		                       generator.
+		:param n_beads:        Chain length.
+		:param bottom_padding: Distance between the bottom edge of the box and the grafting layer. Must be positive.
 		"""
 		self.box_size = list(box_size)
 		self.rng_seed = rng_seed
@@ -75,19 +73,19 @@ class BrushGenerator(ABC):
 		"""
 		Adds a bead to the instance's atom/bond/angle/dihedral lists.
 		Override this and implement according to the polymer model used. Note that LAMMPS expects ids to be 1-indexed.
-		:param int        mol_id:      0-indexed molecule (chain) id
-		:param np.ndarray graft_coord: 2-element ndarray containing xy coordinate of the grafting point
-		:param int        bead_id:     0-indexed bead id
-		:return float:                 Maximum z height
+		:param mol_id:      0-indexed molecule (chain) id
+		:param graft_coord: 2-element ndarray containing xy coordinate of the grafting point
+		:param bead_id:     0-indexed bead id
+		:return Maximum z height
 		"""
 		pass
 
 	def generate_grafting_layer(self, n_chains: int, max_overlap_iter: int = 10**3) -> int:
 		"""
 		Generate coordinates of the grafting layer using a Poisson-disk point set generator.
-		:param int n_chains:         Number of grafting points (chains).
-		:param int max_overlap_iter: Iteration limit for the Poisson-disk point set generator.
-		:return: int:                Number of grafting points generated.
+		:param n_chains:         Number of grafting points (chains).
+		:param max_overlap_iter: Iteration limit for the Poisson-disk point set generator.
+		:return Number of grafting points generated.
 		"""
 		# Generate grafting point coordinates
 		pdg = PoissonDiskGenerator(self.rng_seed)
@@ -98,7 +96,7 @@ class BrushGenerator(ABC):
 	def _build_chain(self) -> float:
 		"""
 		Create chains by looping over chains and beads in each chain, calling _build_bead() for each bead.
-		:return float:                 Maximum z height
+		:return Maximum z height
 		"""
 		z_max = 0
 		# Loop over chains
@@ -136,7 +134,7 @@ class BrushGenerator(ABC):
 	def write(self, filename: str) -> None:
 		"""
 		Write the LAMMPS data file.
-		:param str filename: Filename for the output file.
+		:param filename: Filename for the output file.
 		"""
 		num_atoms = len(self.atoms)
 		num_bonds = len(self.bonds)

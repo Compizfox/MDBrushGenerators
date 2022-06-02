@@ -2,6 +2,7 @@
 Exports CrosslinkGenerator
 Written by G.C. Ritsema van Eck, liberally borrowing and butchering work by L.B. Veldscholte (Compizfox)
 """
+
 import random
 from enum import Enum
 from typing import Optional
@@ -34,15 +35,15 @@ class CrosslinkGenerator(BrushGenerator):
 	}
 
 	def __init__(self, box_size: tuple[float, float, float], rng_seed: Optional[int], n_beads: int,
-	             side_freq: float = 0.0, het_freq: float = 0.0):
+	             side_freq: float = 0, het_freq: float = 0):
 		"""
-		:param Tuple box_size:  3-tuple of floats describing the dimensions of the rectangular box.
-		:param int   rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
-		:param int   n_beads    Chain length.
-		:param float side_freq: Chance of a given backbone particle having a side group attached to it, mutually
-		                        exclusive with being a heteroparticle.
-		:param float het_freq:  Chance of a given backbone particle being a heteroparticle, mutually exclusive with
-		                        having a side group.
+		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box.
+		:param rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param n_beads    Chain length.
+		:param side_freq: Chance of a given backbone particle having a side group attached to it, mutually exclusive
+		                  with being a heteroparticle.
+		:param het_freq:  Chance of a given backbone particle being a heteroparticle, mutually exclusive with having
+		                  a side group.
 		"""
 		bead_size = 1       # (sigma)
 		bottom_padding = 1  # (sigma)

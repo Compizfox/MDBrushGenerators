@@ -15,7 +15,7 @@ class PoissonDiskGenerator:
 
 	def __init__(self, seed: Optional[int]):
 		"""
-		:param int seed: Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param seed: Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
 		"""
 		self.rng = np.random.RandomState(seed=seed)
 
@@ -28,19 +28,19 @@ class PoissonDiskGenerator:
 
 	def generate(self, n: int, bead_size: float, size: Tuple[float, float], max_iter: int = 1000) -> np.ndarray:
 		"""
-		:param int   n:         Number of points.
-		:param float bead_size: Minimum distance between points.
-		:param Tuple size:      2-Tuple corresponding to the (2d) domain size.
-		:param int   max_iter:  Iteration limit.
-		:return: Ndarray of shape (n, 2) with all point coordinates.
+		:param n:         Number of points.
+		:param bead_size: Minimum distance between points.
+		:param size:      2-Tuple corresponding to the (2d) domain size.
+		:param max_iter:  Iteration limit.
+		:return Ndarray of shape (n, 2) with all point coordinates.
 		"""
 
 		def check_overlap(cell: np.ndarray, point: np.ndarray) -> bool:
 			"""
 			Check for overlap in the 8 cells neighboring the current cell.
-			:param np.ndarray cell:  Ndarray of shape (2) containing cell indices.
-			:param np.ndarray point: Ndarray of shape (2) containing the point coordinates.
-			:return bool:            Return True if point overlaps, False if not.
+			:param cell:  Ndarray of shape (2) containing cell indices.
+			:param point: Ndarray of shape (2) containing the point coordinates.
+			:return Return True if point overlaps, False if not.
 			"""
 			for i, j in self.neighbor_matrix:
 				x = cell[0] + i
@@ -54,12 +54,12 @@ class PoissonDiskGenerator:
 
 			return False
 
-		def check_oob(point) -> bool:
+		def check_oob(point: np.ndarray) -> bool:
 			"""
 			Check if the point is out-of-bounds, which can happen because the domain the algorithm runs on is
 			slightly larger than the requested domain because of rasterising errors.
-			:param  np.ndarray point: Ndarray of shape (2) containing the point coordinates.
-			:return bool:             Return True if point is out-of-bounds, False if not.
+			:param  point: Ndarray of shape (2) containing the point coordinates.
+			:return Return True if point is out-of-bounds, False if not.
 			"""
 			return (point > np.array(size)).all()
 
