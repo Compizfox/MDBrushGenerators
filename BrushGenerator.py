@@ -177,43 +177,43 @@ class BrushGenerator(ABC):
 
 			if len(self.pair_ij_coeffs) > 0:
 				f.write("PairIJ Coeffs" + (f" # {self.styles['pair']}" if self.styles['pair'] else '') + "\n\n")
-				for k, v in self.pair_ij_coeffs.items():
-					f.write(f"{k[0].value} {k[1].value} {v}\n")
+				for k, vs in self.pair_ij_coeffs.items():
+					f.write(f"{k[0].value} {k[1].value} " + ' '.join([f'{v:.3g}' for v in vs]) + "\n")
 				f.write("\n")
 
 			if len(self.bond_coeffs) > 0:
 				f.write("Bond Coeffs" + (f" # {self.styles['bond']}" if self.styles['bond'] else '') + "\n\n")
-				for k, v in self.bond_coeffs.items():
-					f.write(f"{k.value} {v}\n")
+				for k, vs in self.bond_coeffs.items():
+					f.write(f"{k.value} " + ' '.join([f'{v:.3g}' for v in vs]) + "\n")
 				f.write("\n")
 
 			if len(self.angle_coeffs) > 0:
 				f.write("Angle Coeffs" + (f" # {self.styles['angle']}" if self.styles['angle'] else '') + "\n\n")
-				for k, v in self.angle_coeffs.items():
-					f.write(f"{k.value} {v}\n")
+				for k, vs in self.angle_coeffs.items():
+					f.write(f"{k.value} " + ' '.join([f'{v:.3g}' for v in vs]) + "\n")
 				f.write("\n")
 
 			if len(self.dihedral_coeffs) > 0:
 				f.write("Dihedral Coeffs" + (f" # {self.styles['dihedral']}" if self.styles['dihedral'] else '') + "\n\n")
-				for k, v in self.dihedral_coeffs.items():
-					f.write(f"{k.value} {v}\n")
+				for k, vs in self.dihedral_coeffs.items():
+					f.write(f"{k.value} " + ' '.join([f'{v:.3g}' for v in vs]) + "\n")
 				f.write("\n")
 
 			# Atom properties
 			f.write("Atoms # full\n\n")
-			self.atoms.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
+			self.atoms.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
 			f.write("\n")
 
 			# Molecular topology
 			if len(self.bonds) > 0:
 				f.write(f"Bonds\n\n")
-				self.bonds.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
+				self.bonds.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
 				f.write("\n")
 			if len(self.angles) > 0:
 				f.write("Angles\n\n")
-				self.angles.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
+				self.angles.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
 				f.write("\n")
 			if len(self.dihedrals) > 0:
 				f.write("Dihedrals\n\n")
-				self.dihedrals.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n')
+				self.dihedrals.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
 				f.write("\n")
