@@ -40,7 +40,7 @@ class PolydisperseKGBrushGenerator(KremerGrestBrushGenerator):
 			n = round(self.cld.rvs(random_state=self.rng) / self.cld_factor)
 			# Loop over successive beads in chain
 			for j in range(0, n + 1):
-				z = self._build_bead(mol_id, i, j)
+				z = self._build_bead(mol_id, i, j, n)
 				if z > z_max:
 					z_max = z
 

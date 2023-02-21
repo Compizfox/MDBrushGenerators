@@ -69,13 +69,15 @@ class BrushGenerator(ABC):
 		self.dihedrals: pd.DataFrame = pd.DataFrame()
 
 	@abstractmethod
-	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> float:
+	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int, chain_length: Optional[int] = None)\
+			-> float:
 		"""
 		Adds a bead to the instance's atom/bond/angle/dihedral lists.
 		Override this and implement according to the polymer model used. Note that LAMMPS expects ids to be 1-indexed.
 		:param mol_id:      0-indexed molecule (chain) id
 		:param graft_coord: 2-element ndarray containing xy coordinate of the grafting point
 		:param bead_id:     0-indexed bead id
+		:param chain_length Length of current chain (used for assigning different atom_type for chain end)
 		:return Maximum z height
 		"""
 		pass
@@ -103,7 +105,7 @@ class BrushGenerator(ABC):
 		for mol_id, i in enumerate(self.coordinates):
 			# Loop over successive beads in chain
 			for j in range(0, self.n_beads + 1):
-				z = self._build_bead(mol_id, i, j)
+				z = self._build_bead(mol_id, i, j, self.n_beads)
 				if z > z_max:
 					z_max = z
 

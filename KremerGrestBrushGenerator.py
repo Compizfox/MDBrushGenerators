@@ -18,13 +18,14 @@ class KremerGrestBrushGenerator(BrushGenerator):
 	1990, 92 (8), 5057–5086. https://doi.org/10.1063/1.458541.
 	"""
 
-	AtomTypes = Enum('AtomTypes', ['graft', 'bead', 'solvent'])
+	AtomTypes = Enum('AtomTypes', ['graft', 'bead', 'end_bead', 'solvent'])
 	BondTypes = Enum('BondTypes', ['fene'])
 
 	masses = {
-		AtomTypes.graft  : 1,
-		AtomTypes.bead   : 1,
-		AtomTypes.solvent: 1
+		AtomTypes.graft   : 1,
+		AtomTypes.bead    : 1,
+		AtomTypes.end_bead: 1,
+		AtomTypes.solvent : 1
 	}
 
 	styles = {
@@ -46,16 +47,19 @@ class KremerGrestBrushGenerator(BrushGenerator):
 		self.graft = graft
 		super().__init__(box_size, rng_seed, bead_size, n_beads, bottom_padding)
 
-	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int) -> float:
+	def _build_bead(self, mol_id: int, graft_coord: np.ndarray, bead_id: int, chain_length: Optional[int] = None)\
+			-> float:
 		if bead_id == 0:
 			# Omit grafting bead if graft=False
 			if not self.graft:
 				return 0
 			atom_type = self.AtomTypes.graft.value
+		elif chain_length and bead_id == chain_length:
+			atom_type = self.AtomTypes.end_bead.value
 		else:
 			atom_type = self.AtomTypes.bead.value
 
-		self._atoms_list.append({'mol_id'   : bead_id + 1,
+		self._atoms_list.append({'mol_id'   : mol_id + 1,
 		                         'atom_type': atom_type,
 		                         'q'        : 0,
 		                         'x'        : graft_coord[0],
