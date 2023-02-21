@@ -4,8 +4,9 @@ Exports the PolydisperseKGBrushGenerator and PoissonKGBrushGenerator classes
 from typing import Optional
 
 import numpy as np
-from scipy.stats._distn_infrastructure import rv_frozen
+from scipy.stats._distn_infrastructure import rv_discrete, rv_frozen
 from scipy.stats import poisson
+from scipy.special import gamma
 
 from KremerGrestBrushGenerator import KremerGrestBrushGenerator
 
@@ -63,4 +64,37 @@ class PoissonKGBrushGenerator(PolydisperseKGBrushGenerator):
 		:param graft:     Generates grafted brushes when True, and non-grafted films when False.
 		"""
 		cld = poisson(n_mean * cg_factor)
+		super().__init__(box_size, rng_seed, cld, cg_factor, graft)
+
+
+class SchulzZimmKGBrushGenerator(PolydisperseKGBrushGenerator):
+	"""
+	Generate a LAMMPS data file containing a Kremer-Grest polymer brush, with chain lengths obeying a Schulz-Zimm
+	distribution, grafted to a planar wall in a	rectangular box.
+	"""
+	class SchulzZimm_gen(rv_discrete):
+		"""
+		Schulz-Zimm distribution
+
+		(1) de Vos, W. M.; Leermakers, F. A. M. Modeling the Structure of a Polydisperse Polymer Brush.
+		Polymer 2009, 50 (1), 305–316. https://doi.org/10.1016/j.polymer.2008.10.025.
+		"""
+
+		def _pmf(self, N_i, N_n, x):
+			return x ** (x + 1) / gamma(x + 1) * N_i ** (x - 1) / N_n ** x * np.exp(-x * N_i / N_n)
+
+	SchulzZimm = SchulzZimm_gen(name="Schulz-Zimm")
+
+	def __init__(self, box_size: tuple[float, float, Optional[float]], rng_seed: Optional[int], n_mean: int, x: float,
+	             cg_factor: float = 1, graft: bool = True):
+		"""
+		:param box_size:  3-tuple of floats describing the dimensions of the rectangular box.
+		:param rng_seed:  Seed used to initialize the PRNG. May be None, in which case a random seed will be used.
+		:param n_mean:    Number-average chain length.
+		:param x:         Broadness of the Schulz-Zimm distribution
+		:param cg_factor: Coarse-graining factor (number of real monomers per coarse-grained bead) that will be taken
+		                  into account for the distribution.
+		:param graft:     Generates grafted brushes when True, and non-grafted films when False.
+		"""
+		cld = self.SchulzZimm(n_mean * cg_factor, x)
 		super().__init__(box_size, rng_seed, cld, cg_factor, graft)
