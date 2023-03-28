@@ -35,6 +35,8 @@ class PoissonDiskGenerator:
 		:return Ndarray of shape (n, 2) with all point coordinates.
 		"""
 
+		bead_size_squared = bead_size**2
+
 		def check_overlap(cell: np.ndarray, point: np.ndarray) -> bool:
 			"""
 			Check for overlap in the 8 cells neighboring the current cell.
@@ -48,8 +50,7 @@ class PoissonDiskGenerator:
 				if 0 <= x <= (x_max - 1) and 0 <= y <= (y_max - 1):
 					coord = grid_lookup[x][y]
 					if coord is not None:
-						dist = (point - coord)**2
-						if dist[0] + dist[1] < bead_size:
+						if sum((point - coord)**2) < bead_size_squared:
 							return True
 
 			return False
