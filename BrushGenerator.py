@@ -48,7 +48,7 @@ class BrushGenerator(ABC):
 		:param n_beads:        Chain length.
 		:param bottom_padding: Distance between the bottom edge of the box and the grafting layer. Must be positive.
 		"""
-		self.box_size = list(box_size)
+		self.box_size = box_size
 		self.rng_seed = rng_seed
 		self.bead_size = bead_size
 		self.n_beads = n_beads
@@ -90,8 +90,8 @@ class BrushGenerator(ABC):
 		:return Number of grafting points generated.
 		"""
 		# Generate grafting point coordinates
-		pdg = PoissonDiskGenerator(self.rng_seed)
-		self.coordinates = pdg.generate(n_chains, self.bead_size, self.box_size[0:2], max_overlap_iter)
+		points = PoissonDiskGenerator.gen(n_chains, self.bead_size, self.box_size[0:2], self.rng_seed, max_overlap_iter)
+		self.coordinates = np.asarray(points)
 
 		return len(self.coordinates)
 

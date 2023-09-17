@@ -1,0 +1,30 @@
+[build-system]
+requires = ["maturin>=1.2,<2.0", "poetry-core"]
+build-backend = "maturin"
+
+[project]
+name = "PoissonDiskGenerator"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+
+[tool.poetry]
+name = "PoissonDiskGenerator"
+version = "0.1.0"
+description = ""
+authors = ["Lars Veldscholte <lars@tuxplace.nl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.25.2"
+matplotlib = "^3.8.0"
+maturin = "^1.2.3"
+pandas = "^2.1.0"
