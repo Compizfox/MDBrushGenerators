@@ -27,13 +27,22 @@ foo@bar:~$ git clone https://github.com/Compizfox/MDBrushGenerators.git
 or download a release and extract it. The Git approach has the advantage that updating is as easy as `git pull`.
 
 ### Dependencies
-MDBrushGenerators requires at least Python 3.6. The only external libraries required are Numpy and Pandas, which are
-installable using your OS's package manager or using Pip:
+MDBrushGenerators requires at least Python 3.6, Poetry, and a Rust compiler to build the `PoissonDiskGenerator`.
+
+Install the dependencies using Poetry:
 
 ```console
-foo@bar:~$ pip install numpy
-foo@bar:~$ pip install pandas
+$ poetry install
 ```
+
+Then, cd into the `PoissonDiskGenerator` directory and build the Rust code using Maturin:
+
+```console
+$ cd PoissonDiskGenerator
+$ maturin develop -r
+```
+
+The `PoissonDiskGenerator` module should then be installed in the Poetry virtualenv.
 
 ## Usage
 ### Kremer-Grest
