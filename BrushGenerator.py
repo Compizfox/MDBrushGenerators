@@ -201,19 +201,19 @@ class BrushGenerator(ABC):
 
 			# Atom properties
 			f.write("Atoms # full\n\n")
-			self.atoms.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
+			self.atoms.to_csv(f, sep=' ', header=False, index=True, lineterminator='\n', float_format='%.3g')
 			f.write("\n")
 
 			# Molecular topology
 			if len(self.bonds) > 0:
 				f.write(f"Bonds\n\n")
-				self.bonds.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
+				self.bonds.to_csv(f, sep=' ', header=False, index=True, lineterminator='\n', float_format='%.3g')
 				f.write("\n")
 			if len(self.angles) > 0:
 				f.write("Angles\n\n")
-				self.angles.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
+				self.angles.to_csv(f, sep=' ', header=False, index=True, lineterminator='\n', float_format='%.3g')
 				f.write("\n")
 			if len(self.dihedrals) > 0:
 				f.write("Dihedrals\n\n")
-				self.dihedrals.to_csv(f, sep=' ', header=False, index=True, line_terminator='\n', float_format='%.3g')
+				self.dihedrals.to_csv(f, sep=' ', header=False, index=True, lineterminator='\n', float_format='%.3g')
 				f.write("\n")
