@@ -32,7 +32,7 @@ fn gen(n: usize, bead_size: f64, size: (f64, f64), seed: Option<u64>, max_iter: 
     let mut coordinates: Vec<(f64, f64)> = Vec::new();
 
     // Initialize PRNG
-    let mut small_rng = match seed {
+    let mut rng = match seed {
         Some(x) => SmallRng::seed_from_u64(x),
         None => SmallRng::from_entropy(),
     };
@@ -76,13 +76,13 @@ fn gen(n: usize, bead_size: f64, size: (f64, f64), seed: Option<u64>, max_iter: 
         }
 
         // Choose random active cell
-        let cell_id = small_rng.gen_range(0..active_cells.len());
+        let cell_id = rng.gen_range(0..active_cells.len());
         let cell = active_cells[cell_id];
 
         // Throw a dart
         let point = (
-            (cell.0 as f64 + random::<f64>()) * cell_size,
-            (cell.1 as f64 + random::<f64>()) * cell_size,
+            (cell.0 as f64 + rng.gen::<f64>()) * cell_size,
+            (cell.1 as f64 + rng.gen::<f64>()) * cell_size,
         );
 
         // Check whether point overlaps in neighbouring cells or is OOB
